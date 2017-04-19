@@ -10,6 +10,7 @@ import {
   StyleSheet,
   PanResponder,
   View,
+  Text,
   Easing
 } from "react-native";
 
@@ -234,8 +235,8 @@ export default class Slider extends PureComponent {
     var {value, containerSize, trackSize, thumbSize, allMeasured} = this.state;
     var mainStyles = styles || defaultStyles;
     var thumbLeft = value.interpolate({
-        inputRange: [minimumValue, maximumValue],
-        outputRange: [0, containerSize.width - thumbSize.width],
+        inputRange: [minimumValue + this.props.minimumInputRange, maximumValue],
+        outputRange: [0, containerSize.width - this.props.maximumOutputRange],
         //extrapolate: 'clamp',
       });
     var valueVisibleStyle = {};
@@ -265,18 +266,22 @@ export default class Slider extends PureComponent {
           onLayout={this._measureThumb}
           renderToHardwareTextureAndroid={true}
           style={[
-            {backgroundColor: thumbTintColor},
-            mainStyles.thumb, thumbStyle,
+            {backgroundColor: 'transparent', height: this.props.thumbView.height, width: this.props.thumbView.width},
+            mainStyles.thumb,
             {
               transform: [
                 { translateX: thumbLeft },
                 { translateY: 0 }
               ],
               ...valueVisibleStyle
-            }
+            },
+            { alignItems: 'center', justifyContent: 'center' },
           ]}
         >
-          {this._renderThumbImage()}
+          <Image style={{ width: this.props.thumbSize, height: this.props.thumbSize, alignSelf: 'center' }} resizeMode="cover" source={thumbImage} />
+          <View style={{ bottom: this.props.distanceFromThumb, position: 'absolute' }}>
+            <Text style={this.props.valueStyle}>{this.props.showValue}</Text>
+          </View>
         </Animated.View>
         <View
           renderToHardwareTextureAndroid={true}
@@ -512,7 +517,7 @@ export default class Slider extends PureComponent {
 
 var defaultStyles = StyleSheet.create({
   container: {
-    height: 40,
+    height: 60,
     justifyContent: 'center',
   },
   track: {
@@ -521,9 +526,6 @@ var defaultStyles = StyleSheet.create({
   },
   thumb: {
     position: 'absolute',
-    width: THUMB_SIZE,
-    height: THUMB_SIZE,
-    borderRadius: THUMB_SIZE / 2,
   },
   touchArea: {
     position: 'absolute',
