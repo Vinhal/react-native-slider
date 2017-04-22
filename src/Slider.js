@@ -254,41 +254,47 @@ export default class Slider extends PureComponent {
     var touchOverflowStyle = this._getTouchOverflowStyle();
 
     return (
-      <View {...other} style={[mainStyles.container, style]} onLayout={this._measureContainer}>
-        <View
-          style={[{backgroundColor: maximumTrackTintColor,}, mainStyles.track, trackStyle]}
-          renderToHardwareTextureAndroid={true}
-          onLayout={this._measureTrack} />
-        <Animated.View
-          renderToHardwareTextureAndroid={true}
-          style={[mainStyles.track, trackStyle, minimumTrackStyle]} />
-        <Animated.View
-          onLayout={this._measureThumb}
-          renderToHardwareTextureAndroid={true}
-          style={[
-            {backgroundColor: 'transparent', height: this.props.thumbView.height, width: this.props.thumbView.width},
-            mainStyles.thumb,
-            {
-              transform: [
-                { translateX: thumbLeft },
-                { translateY: 0 }
-              ],
-              ...valueVisibleStyle
-            },
-            { alignItems: 'center', justifyContent: 'center' },
-          ]}
-        >
-          <Image style={{ width: this.props.thumbSize, height: this.props.thumbSize, alignSelf: 'center' }} resizeMode="cover" source={thumbImage} />
-          <View style={{ bottom: this.props.distanceFromThumb, position: 'absolute' }}>
-            <Text style={this.props.valueStyle}>{this.props.showValue}</Text>
+      <View style={{ flex: 1, flexDirection: 'row' }}>
+        <View {...other} style={[mainStyles.container, style]} onLayout={this._measureContainer}>
+          <View
+            style={[{backgroundColor: maximumTrackTintColor,}, mainStyles.track, trackStyle]}
+            renderToHardwareTextureAndroid={true}
+            onLayout={this._measureTrack} />
+          <Animated.View
+            renderToHardwareTextureAndroid={true}
+            style={[mainStyles.track, trackStyle, minimumTrackStyle]} />
+          <Animated.View
+            onLayout={this._measureThumb}
+            renderToHardwareTextureAndroid={true}
+            style={[
+              {backgroundColor: 'transparent', height: this.props.thumbView.height, width: this.props.thumbView.width},
+              mainStyles.thumb,
+              {
+                transform: [
+                  { translateX: thumbLeft },
+                  { translateY: 0 }
+                ],
+                ...valueVisibleStyle
+              },
+              { alignItems: 'center', justifyContent: 'center' },
+            ]}
+          >
+            <Image style={{ width: this.props.thumbSize, height: this.props.thumbSize, alignSelf: 'center' }} resizeMode="cover" source={thumbImage} />
+            <View style={{ bottom: this.props.distanceFromThumb, position: 'absolute' }}>
+              <Text style={this.props.valueStyle}>{this.props.showValue}</Text>
+            </View>
+          </Animated.View>
+          <View
+            renderToHardwareTextureAndroid={true}
+            style={[defaultStyles.touchArea, touchOverflowStyle]}
+            {...this._panResponder.panHandlers}>
+            {debugTouchArea === true && this._renderDebugThumbTouchRect(thumbLeft)}
           </View>
-        </Animated.View>
-        <View
-          renderToHardwareTextureAndroid={true}
-          style={[defaultStyles.touchArea, touchOverflowStyle]}
-          {...this._panResponder.panHandlers}>
-          {debugTouchArea === true && this._renderDebugThumbTouchRect(thumbLeft)}
         </View>
+        <View style={{ marginLeft: -12, alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={this.props.totalValueStyle}>{this.props.totalValue}</Text>
+        </View>
+
       </View>
     );
   };
@@ -504,14 +510,6 @@ export default class Slider extends PureComponent {
         pointerEvents='none'
       />
     );
-  };
-
-  _renderThumbImage = () => {
-    var {thumbImage} = this.props;
-
-    if (!thumbImage) return;
-
-    return <Image source={thumbImage} />;
   };
 }
 
