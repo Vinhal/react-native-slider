@@ -69,6 +69,8 @@ export default class Slider extends PureComponent {
      */
     disabled: PropTypes.bool,
 
+    growless: PropTypes.bool,
+
     /**
      * Initial minimum value of the slider. Default value is 0.
      */
@@ -330,7 +332,7 @@ export default class Slider extends PureComponent {
   };
 
   _handlePanResponderMove = (e: Object, gestureState: Object) => {
-    if (this.props.disabled) {
+    if (this.props.disabled || (this.props.growless && gestureState.dx > 0)) {
       return;
     }
 
@@ -344,7 +346,7 @@ export default class Slider extends PureComponent {
   };
 
   _handlePanResponderEnd = (e: Object, gestureState: Object) => {
-    if (this.props.disabled) {
+    if (this.props.disabled || (this.props.growless && gestureState.dx > 0)) {
       return;
     }
 
