@@ -278,12 +278,18 @@ export default class Slider extends PureComponent {
                 ],
                 ...valueVisibleStyle
               },
+              { paddingTop: this.props.thumbPaddingTop },
               { alignItems: 'center', justifyContent: 'center' },
             ]}
           >
             <Image style={{ width: this.props.thumbSize, height: this.props.thumbSize, alignSelf: 'center' }} resizeMode="cover" source={thumbImage} />
-            <View style={{ bottom: this.props.distanceFromThumb, position: 'absolute' }}>
+            <View style={{ bottom: this.props.distanceFromThumb }}>
               <Text style={this.props.valueStyle}>{this.props.showValue}</Text>
+              { this.props.triangleView &&
+                <View
+                  style={this.props.triangleStyle}
+                />
+              }
             </View>
           </Animated.View>
           <View
@@ -296,7 +302,6 @@ export default class Slider extends PureComponent {
         <View style={{ marginLeft: -12, alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}>
           <Text style={this.props.totalValueStyle}>{this.props.totalValue}</Text>
         </View>
-
       </View>
     );
   };
